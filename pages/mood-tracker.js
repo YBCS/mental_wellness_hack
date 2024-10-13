@@ -26,7 +26,6 @@ export default function MoodTracker() {
   });
   const [selectedMood, setSelectedMood] = useState(null);
   const [timeline, setTimeline] = useState(7);
-  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     fetchMoodData();
@@ -81,8 +80,6 @@ export default function MoodTracker() {
 
       if (error) throw error;
       fetchMoodData();
-      setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000); // Hide alert after 3 seconds
     } catch (error) {
       console.error('Error recording mood:', error);
     }
@@ -96,36 +93,18 @@ export default function MoodTracker() {
       </Head>
 
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <button
-            onClick={() => router.back()}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300"
-          >
-            ← Back
-          </button>
-          <h1 className="text-3xl font-bold text-center">Mood Tracker</h1>
-          <div className="w-24"></div> {/* Spacer for alignment */}
-        </div>
+        <button
+          onClick={() => router.back()}
+          className="mb-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300"
+        >
+          ← Back
+        </button>
 
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Your Current Mood</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-            {moods.map((mood, index) => (
-              <button
-                key={index}
-                className={`flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 ${selectedMood === mood ? 'ring-2 ring-green-500' : ''}`}
-                onClick={() => handleMoodSelection(mood)}
-              >
-                <span className="text-4xl mb-2">{mood.emoji}</span>
-                <span className="text-sm font-medium">{mood.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+        <h1 className="text-3xl font-bold text-center mb-6">Mood Tracker</h1>
 
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Your Mood History</h2>
+            <h2 className="text-xl font-semibold">Your Mood Overview</h2>
             <select
               value={timeline}
               onChange={(e) => setTimeline(Number(e.target.value))}
@@ -140,20 +119,20 @@ export default function MoodTracker() {
             <Pie data={moodData} />
           </div>
         </div>
-      </div>
 
-      {/* Alert popup */}
-      {showAlert && (
-        <div className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg transition-all duration-300 ease-in-out">
-          <p className="font-semibold">Mood submitted successfully!</p>
-          <button 
-            onClick={() => setShowAlert(false)}
-            className="absolute top-1 right-2 text-white hover:text-gray-200"
-          >
-            ×
-          </button>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+          {moods.map((mood, index) => (
+            <button
+              key={index}
+              className={`flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 ${selectedMood === mood ? 'ring-2 ring-green-500' : ''}`}
+              onClick={() => handleMoodSelection(mood)}
+            >
+              <span className="text-4xl mb-2">{mood.emoji}</span>
+              <span className="text-sm font-medium">{mood.label}</span>
+            </button>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }
