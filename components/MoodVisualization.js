@@ -22,7 +22,7 @@ export default function MoodVisualization({ duration }) {
 
   useEffect(() => {
     fetchMoodData();
-  }, [duration]);
+  }, [fetchMoodData]); // Add fetchMoodData to the dependency array
 
   const fetchMoodData = async () => {
     setIsLoading(true);

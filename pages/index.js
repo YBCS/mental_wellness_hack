@@ -15,7 +15,7 @@ export default function Home() {
       }
     };
     checkUser();
-  }, []);
+  }, [router]); // Add router to the dependency array
 
   return null;
 }

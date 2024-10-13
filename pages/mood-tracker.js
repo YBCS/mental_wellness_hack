@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { supabase } from '../utils/supabaseClient';
+import { motion, AnimatePresence } from 'framer-motion';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -15,8 +16,20 @@ const moods = [
   { emoji: '😴', label: 'Tired', color: '#8E44AD' },
 ];
 
+const Notification = ({ message, onClose }) => (
+  <motion.div
+    initial={{ opacity: 0, y: -50 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -50 }}
+    className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-md"
+  >
+    {message}
+  </motion.div>
+);
+
 export default function MoodTracker() {
   const router = useRouter();
+  const [user, setUser] = useState(null);
   const [moodData, setMoodData] = useState({
     labels: moods.map(mood => mood.label),
     datasets: [{
@@ -26,14 +39,10 @@ export default function MoodTracker() {
   });
   const [selectedMood, setSelectedMood] = useState(null);
   const [timeline, setTimeline] = useState(7);
+  const [notification, setNotification] = useState(null);
 
-  useEffect(() => {
-    fetchMoodData();
-  }, [timeline]);
-
-  const fetchMoodData = async () => {
+  const fetchMoodData = useCallback(async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - timeline);
 
@@ -66,12 +75,24 @@ export default function MoodTracker() {
     } catch (error) {
       console.error('Error fetching mood data:', error);
     }
-  };
+  }, [user, timeline]);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUser(user);
+        fetchMoodData();
+      } else {
+        router.push('/login');
+      }
+    };
+    checkUser();
+  }, [router, fetchMoodData]);
 
   const handleMoodSelection = async (mood) => {
     setSelectedMood(mood);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
       const { error } = await supabase
         .from('moods')
         .insert([
@@ -80,10 +101,18 @@ export default function MoodTracker() {
 
       if (error) throw error;
       fetchMoodData();
+      setNotification(`Mood "${mood.label}" recorded successfully!`);
+      setTimeout(() => setNotification(null), 3000); // Hide notification after 3 seconds
     } catch (error) {
       console.error('Error recording mood:', error);
+      setNotification('Error recording mood. Please try again.');
+      setTimeout(() => setNotification(null), 3000);
     }
   };
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-400 to-white p-4">
@@ -133,6 +162,15 @@ export default function MoodTracker() {
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {notification && (
+          <Notification 
+            message={notification} 
+            onClose={() => setNotification(null)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
