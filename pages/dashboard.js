@@ -1,70 +1,47 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+import Link from 'next/link';
 import { supabase } from '../utils/supabaseClient';
+import DashboardLayout from '../components/DashboardLayout';
+import MoodSummary from '../components/MoodSummary';
+import RecentActivity from '../components/RecentActivity';
+import QuickActions from '../components/QuickActions';
 
 export default function Dashboard() {
-  const router = useRouter();
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        setUser(session.user);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUser(user);
       } else {
         router.push('/login');
       }
     };
     checkUser();
-  }, []);
+  }, [router]);
 
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      router.push('/login');
-    } catch (error) {
-      alert('Error logging out:', error.message);
-    }
-  };
+  if (!user) {
+    return <div className="text-center py-12">Loading...</div>;
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-100 to-blue-200">
-      <nav className="bg-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <span className="text-2xl font-bold text-teal-600">Easemind</span>
-              </div>
-            </div>
-            <div className="flex items-center">
-              {user && (
-                <button
-                  onClick={handleLogout}
-                  className="ml-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-300"
-                >
-                  Logout
-                </button>
-              )}
-            </div>
-          </div>
+    <DashboardLayout>
+      <Head>
+        <title>Dashboard | Easemind</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome, {user.email}!</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <MoodSummary />
+          <RecentActivity />
+          <QuickActions />
         </div>
-      </nav>
-
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="bg-white overflow-hidden shadow-xl rounded-lg p-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Welcome to Your Dashboard</h1>
-            {user && (
-              <div>
-                <p className="text-xl text-gray-700">Hello, {user.email}!</p>
-                <p className="mt-2 text-gray-600">This is your personal space for mental well-being. Take a deep breath and explore the tools and resources available to you.</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }

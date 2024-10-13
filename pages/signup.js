@@ -9,22 +9,34 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setMessage(null);
 
     try {
-      const { user, error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
       
       if (error) throw error;
 
-      console.log('User signed up:', user);
-      router.push('/dashboard');
+      if (data.user) {
+        setMessage('Signup successful! Redirecting to dashboard...');
+        // Redirect to dashboard after successful signup
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 2000);
+      } else {
+        setMessage('An unexpected error occurred. Please try again.');
+      }
     } catch (error) {
-      setError(error.message);
-      console.error('Error signing up:', error.message);
+      console.error('Signup error:', error);
+      setError(error.message || 'An unexpected error occurred');
     }
   };
 
@@ -89,6 +101,12 @@ export default function Signup() {
           {error && (
             <div className="text-red-600 text-sm text-center">
               {error}
+            </div>
+          )}
+
+          {message && (
+            <div className="text-green-600 text-sm text-center">
+              {message}
             </div>
           )}
 
