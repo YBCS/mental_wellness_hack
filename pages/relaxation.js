@@ -329,7 +329,7 @@ export default function Relaxation() {
                       {exercise.id !== 6 && (
                         <ol className="list-decimal list-inside mb-4">
                           {exercise.steps.map((step, index) => (
-                            <li key={index} className="mb-2">{step}</li>
+                            <li key={index} className="mb-2 text-gray-500" >{step}</li>
                           ))}
                         </ol>
                       )}

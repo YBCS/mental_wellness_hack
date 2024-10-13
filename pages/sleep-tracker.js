@@ -103,7 +103,7 @@ export default function SleepTracker() {
         <h1 className="text-3xl font-bold text-center mb-6">Sleep Tracker</h1>
 
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Log Your Sleep</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-500">Log Your Sleep</h2>
           <form onSubmit={handleSubmit} className="flex items-center space-x-4">
             <input
               type="number"
@@ -127,11 +127,11 @@ export default function SleepTracker() {
 
         <div className="bg-white rounded-xl shadow-lg p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Your Sleep History</h2>
+            <h2 className="text-xl font-semibold text-gray-500">Your Sleep History</h2>
             <select
               value={timeline}
               onChange={(e) => setTimeline(Number(e.target.value))}
-              className="border rounded-md p-2"
+              className="border rounded-md p-2 bg-gray-400"
             >
               <option value={7}>Last 7 days</option>
               <option value={14}>Last 14 days</option>

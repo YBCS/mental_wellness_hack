@@ -20,7 +20,7 @@ export default function MentalHealthResources() {
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-xl font-semibold mb-4">Crisis Helplines</h2>
+              <h2 className="text-xl font-semibold mb-4 text-gray-500">Crisis Helplines</h2>
               <ul className="space-y-2">
                 <li><a href="https://suicidepreventionlifeline.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">National Suicide Prevention Lifeline</a></li>
                 <li><a href="https://www.samhsa.gov/find-help/national-helpline" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">SAMHSA's National Helpline</a></li>
@@ -30,7 +30,7 @@ export default function MentalHealthResources() {
 
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-xl font-semibold mb-4">Mental Health Organizations</h2>
+              <h2 className="text-xl font-semibold mb-4 text-gray-500">Mental Health Organizations</h2>
               <ul className="space-y-2">
                 <li><a href="https://www.nimh.nih.gov/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">National Institute of Mental Health</a></li>
                 <li><a href="https://www.nami.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">National Alliance on Mental Illness</a></li>
@@ -40,7 +40,7 @@ export default function MentalHealthResources() {
 
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-xl font-semibold mb-4">Online Therapy Resources</h2>
+              <h2 className="text-xl font-semibold mb-4 text-gray-500">Online Therapy Resources</h2>
               <ul className="space-y-2">
                 <li><a href="https://www.betterhelp.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">BetterHelp</a></li>
                 <li><a href="https://www.talkspace.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Talkspace</a></li>
@@ -48,7 +48,7 @@ export default function MentalHealthResources() {
             </div>
           </div>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="bg-white overflow-hidden shadow rounded-lg text-gray-500">
             <div className="px-4 py-5 sm:p-6">
               <h2 className="text-xl font-semibold mb-4">Self-Help Resources</h2>
               <ul className="space-y-2">

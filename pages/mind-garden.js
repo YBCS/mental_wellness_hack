@@ -221,7 +221,7 @@ export default function MindGarden() {
         <title>Mind Garden | Easemind</title>
       </Head>
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Your Mind Garden</h1>
+        <h1 className="text-3xl font-bold mb-6 text-gray-500">Your Mind Garden</h1>
         {tree ? (
           <div className="bg-green-100 p-6 rounded-lg shadow-lg">
             <div className="flex flex-col items-center justify-center" style={{ height: '50vh' }}>
@@ -280,7 +280,7 @@ export default function MindGarden() {
             </div>
           </div>
         ) : (
-          <p>Error loading your garden. Please try refreshing the page.</p>
+          <p >Error loading your garden. Please try refreshing the page.</p>
         )}
       </div>
       <AnimatePresence>

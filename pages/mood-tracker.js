@@ -133,11 +133,11 @@ export default function MoodTracker() {
 
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Your Mood Overview</h2>
+            <h2 className="text-xl font-semibold text-gray-500">Your Mood Overview</h2>
             <select
               value={timeline}
               onChange={(e) => setTimeline(Number(e.target.value))}
-              className="border rounded-md p-2"
+              className="border rounded-md p-2 bg-gray-400"
             >
               <option value={7}>Last 7 days</option>
               <option value={14}>Last 14 days</option>
@@ -153,7 +153,7 @@ export default function MoodTracker() {
           {moods.map((mood, index) => (
             <button
               key={index}
-              className={`flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 ${selectedMood === mood ? 'ring-2 ring-green-500' : ''}`}
+              className={`flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 text-gray-500 ${selectedMood === mood ? 'ring-2 ring-green-500' : ''}`}
               onClick={() => handleMoodSelection(mood)}
             >
               <span className="text-4xl mb-2">{mood.emoji}</span>
