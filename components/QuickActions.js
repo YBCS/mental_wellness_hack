@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { GiPlantRoots } from 'react-icons/gi';
 
 export default function QuickActions() {
   return (
@@ -14,6 +15,10 @@ export default function QuickActions() {
           </Link>
           <Link href="/relaxation" className="text-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
             Relaxation
+          </Link>
+          <Link href="/mind-garden" className="text-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+            <GiPlantRoots className="inline-block mr-2" />
+            Mind Garden
           </Link>
           {/* Add more quick actions as needed */}
         </div>
