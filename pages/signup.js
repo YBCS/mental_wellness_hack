@@ -1,94 +1,84 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
 import { supabase } from '../utils/supabaseClient';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
+  const [error, setError] = useState(null);
   const router = useRouter();
 
-  const handleSignup = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            first_name: firstName,
-            last_name: lastName,
-            username: username,
-          }
-        }
-      });
+      const { user, error } = await supabase.auth.signUp({ email, password });
+      
       if (error) throw error;
-      alert('Signup successful! Please check your email for verification.');
-      router.push('/login');
+
+      console.log('User signed up:', user);
+      router.push('/dashboard');
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
+      console.error('Error signing up:', error.message);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-teal-200">
-      <div className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full space-y-8 transform transition-all hover:scale-105">
+    <div className="min-h-screen bg-gradient-to-br from-green-400 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <Head>
+        <title>Sign Up | Easemind</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-2xl">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your account</h2>
+          <Image
+            src="/logo.png"
+            alt="Easemind Logo"
+            width={100}
+            height={100}
+            className="mx-auto"
+          />
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Create your account
+          </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Start your journey to better mental well-being
+            Join Easemind today
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSignup}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
+              <label htmlFor="email-address" className="sr-only">
+                Email address
+              </label>
               <input
-                type="text"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
-                placeholder="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                type="text"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                type="text"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
+                id="email-address"
+                name="email"
                 type="email"
+                autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <input
+                id="password"
+                name="password"
                 type="password"
+                autoComplete="new-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -96,19 +86,28 @@ export default function Signup() {
             </div>
           </div>
 
+          {error && (
+            <div className="text-red-600 text-sm text-center">
+              {error}
+            </div>
+          )}
+
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors duration-300"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
             >
-              Sign Up
+              Sign up
             </button>
           </div>
         </form>
         <div className="text-center">
-          <Link href="/login" className="font-medium text-teal-600 hover:text-teal-500 transition-colors duration-300">
-            Already have an account? Log in
-          </Link>
+          <p className="text-sm text-gray-600">
+            Already have an account?{' '}
+            <Link href="/login" className="font-medium text-green-600 hover:text-green-500">
+              Sign in
+            </Link>
+          </p>
         </div>
       </div>
     </div>
